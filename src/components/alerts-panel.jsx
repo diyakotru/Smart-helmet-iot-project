@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card } from "../components/ui/card"
+import { Card } from "../components/ui/card" // Assuming Card accepts Tailwind classes
 
 export default function AlertsPanel() {
   const [alerts, setAlerts] = useState([
@@ -12,7 +12,7 @@ export default function AlertsPanel() {
       timestamp: new Date(Date.now() - 2 * 60000),
       severity: 'warning',
       workerId: 'WRK003',
-    },
+    },  
     {
       id: '2',
       type: 'Fall',
@@ -31,6 +31,7 @@ export default function AlertsPanel() {
     },
   ])
 
+  // Simulate live sensor updates
   useEffect(() => {
     const interval = setInterval(() => {
       setAlerts((prev) => {
@@ -66,44 +67,66 @@ export default function AlertsPanel() {
     if (minutes > 0) return `${minutes}m ago`
     return `${seconds}s ago`
   }
+  
+  // --- Theme Helpers ---
+  const getSeverityClasses = (severity) => {
+    if (severity === 'danger') {
+      return {
+        bg: 'bg-red-900/20',
+        border: 'border-red-600',
+        text: 'text-red-400',
+        dot: 'bg-red-500 animate-pulse-slow',
+        shadow: 'shadow-lg shadow-red-900/50',
+        animation: 'animate-slide-in-alert', // Custom animation for new danger alerts
+      };
+    }
+    // Warning and other severities use the primary yellow accent
+    return {
+      bg: 'bg-yellow-900/20',
+      border: 'border-yellow-600',
+      text: 'text-yellow-400',
+      dot: 'bg-yellow-500',
+      shadow: 'shadow-lg shadow-yellow-900/30',
+      animation: 'animate-slide-in-alert', // Custom animation for new warning alerts
+    };
+  };
 
   return (
-    <div className="space-y-3 max-h-[600px] overflow-y-auto">
+    <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar animate-fade-in-up">
       {alerts.length > 0 ? (
-        alerts.map((alert) => (
-          <div
-            key={alert.id}
-            className={`p-4 rounded-lg border animate-in slide-in-from-right-1/2 duration-300 ${
-              alert.severity === 'danger'
-                ? 'bg-danger-red/10 border-danger-red/50'
-                : 'bg-warning-orange/10 border-warning-orange/50'
-            }`}
-          >
-            <div className="flex items-start gap-3">
-              <div
-                className={`w-2 h-2 rounded-full mt-1 flex-shrink-0 ${
-                  alert.severity === 'danger' ? 'bg-danger-red' : 'bg-warning-orange'
-                }`}
-              />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2 mb-1">
-                  <h4 className="font-semibold text-sm">{alert.type} Alert</h4>
-                  <span className="text-xs text-muted-foreground flex-shrink-0">
-                    {formatTime(alert.timestamp)}
-                  </span>
+        alerts.map((alert) => {
+          const classes = getSeverityClasses(alert.severity);
+          return (
+            <div
+              key={alert.id}
+              className={`p-4 rounded-xl border transition-all duration-300 ${classes.bg} ${classes.border} ${classes.shadow} ${classes.animation}`}
+            >
+              <div className="flex items-start gap-3">
+                <div
+                  className={`w-2.5 h-2.5 rounded-full mt-1 flex-shrink-0 ${classes.dot}`}
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <h4 className={`font-semibold text-sm ${classes.text} uppercase`}>
+                      {alert.type} Alert
+                    </h4>
+                    <span className="text-xs text-gray-500 flex-shrink-0">
+                      {formatTime(alert.timestamp)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-400 leading-relaxed line-clamp-2">
+                    {alert.message}
+                  </p>
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
-                  {alert.message}
-                </p>
               </div>
             </div>
-          </div>
-        ))
+          );
+        })
       ) : (
-        <Card className="p-8 border-border/40 text-center">
-          <p className="text-muted-foreground text-sm">No alerts at this time</p>
+        <Card className="p-8 bg-gray-900 border border-gray-800 text-center animate-pulse-subtle">
+          <p className="text-gray-500 text-sm">No critical alerts at this time</p>
         </Card>
       )}
     </div>
-  )
+  );
 }

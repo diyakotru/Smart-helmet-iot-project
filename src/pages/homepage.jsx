@@ -78,9 +78,9 @@ export default function HomePage() {
         <nav className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center animate-fade-in">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-yellow-500 rounded flex items-center justify-center font-extrabold text-black text-lg transform hover:scale-110 transition duration-300">
-              HM
+              SC
             </div>
-            <span className="font-extrabold text-xl text-white tracking-wider">SMART-SITE</span>
+            <span className="font-extrabold text-xl text-white tracking-wider">SMART-CAP</span>
           </div>
           <div className="flex gap-4">
             <Link
