@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import HelmetImage from "../assets/helmet.png"; // Import the helmet image
+import HelmetImage from "../assets/helmet.png";
 
 export default function HomePage() {
   const [hoveredSensor, setHoveredSensor] = useState(null);
@@ -57,45 +57,64 @@ export default function HomePage() {
 
   const currentDetails = getCurrentSensorDetails(hoveredSensor);
 
-  // Helper function to determine status classes
   const getStatusClasses = (status) => {
     if (status === "Safe" || status === "Normal" || status === "Green") {
-      // Safe/Normal status -> Green/Teal
       return "bg-teal-600/20 text-teal-400";
     } else if (status === "Standby") {
-      // Standby status -> Gray
       return "bg-gray-600/20 text-gray-400";
     } else {
-      // Alert/Warning status (not explicitly shown but good to have) -> Yellow/Orange
       return "bg-yellow-600/20 text-yellow-400";
     }
   };
 
   return (
     <main className="min-h-screen bg-black text-gray-100 font-sans">
-      {/* Header Navigation */}
+
+      {/* 🔥 UPDATED NAVBAR WITH NEW OPTIONS */}
       <header className="border-b border-gray-800 backdrop-blur-sm bg-black/80 sticky top-0 z-10 shadow-md shadow-yellow-900/10">
         <nav className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center animate-fade-in">
+          
+          {/* Left Logo */}
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-yellow-500 rounded flex items-center justify-center font-extrabold text-black text-lg transform hover:scale-110 transition duration-300">
               SC
             </div>
             <span className="font-extrabold text-xl text-white tracking-wider">SMART-CAP</span>
           </div>
-          <div className="flex gap-4">
+
+          {/* Right Navigation Buttons */}
+          <div className="flex gap-4 flex-wrap">
+
             <Link
               to="/dashboard"
               className="px-4 py-2 border border-yellow-500 text-yellow-400 rounded-lg hover:bg-yellow-900/50 transition font-medium transform hover:scale-105 duration-300"
             >
               Dashboard
             </Link>
+
+            <Link
+              to="/workers"
+              className="px-4 py-2 border border-yellow-500 text-yellow-400 rounded-lg hover:bg-yellow-900/50 transition font-medium transform hover:scale-105 duration-300"
+            >
+              Workers Overview
+            </Link>
+
+            <Link
+              to="/settings"
+              className="px-4 py-2 border border-yellow-600 text-yellow-400 rounded-lg hover:bg-yellow-900/50 transition font-medium transform hover:scale-105 duration-300"
+            >
+              Settings
+            </Link>
+
             <Link
               to="/database"
               className="px-4 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition font-medium shadow-lg shadow-yellow-500/30 transform hover:scale-105 duration-300"
             >
               Data Archive
             </Link>
+
           </div>
+
         </nav>
       </header>
 
