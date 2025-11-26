@@ -1,52 +1,24 @@
 // Dashboard.jsx
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
-import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
 
 import LiveSensorDataPanel from "../components/live-sensor-panel";
 import AlertsPanel from "../components/alerts-panel";
 
-// Mock data for charts
-const temperatureData = [
-  { time: "00:00", temp: 22, humidity: 45 },
-  { time: "04:00", temp: 20, humidity: 50 },
-  { time: "08:00", temp: 25, humidity: 48 },
-  { time: "12:00", temp: 28, humidity: 60 },
-  { time: "16:00", temp: 26, humidity: 55 },
-  { time: "20:00", temp: 23, humidity: 52 },
-  { time: "24:00", temp: 21, humidity: 46 },
-];
-
-const gasLevelsData = [
-  { sensor: "CO", level: 12, safe: 35 },
-  { sensor: "CH4", level: 8, safe: 20 },
-  { sensor: "H2S", level: 3, safe: 10 },
-  { sensor: "O2", level: 20.8, safe: 19.5 },
-];
-
-const workerActivityData = [
-  { hour: "6:00", active: 5, idle: 2 },
-  { hour: "9:00", active: 12, idle: 1 },
-  { hour: "12:00", active: 8, idle: 3 },
-  { hour: "15:00", active: 14, idle: 2 },
-  { hour: "18:00", active: 10, idle: 4 },
-];
+const THINGSPEAK_CHANNEL_ID = "3175273"; // keep your channel id here
 
 export default function Dashboard() {
   const [refreshInterval] = useState(5000);
+
+  // Shared alert list (source of truth for AlertsPanel)
+  const [alertList, setAlertList] = useState([]);
+
+  // iframe styles (keeps chart responsive)
+  const IFRAME_STYLE_FULL = {
+    width: "100%",
+    height: "100%",
+    border: "none",
+  };
 
   return (
     <main className="min-h-screen bg-black text-gray-100 font-sans">
@@ -74,81 +46,76 @@ export default function Dashboard() {
 
       {/* Dashboard Body */}
       <section className="max-w-7xl mx-auto px-4 py-8 space-y-8 animate-fade-in-up">
-        
         {/* A. Live Sensor Data */}
         <div className="bg-gray-900 p-6 rounded-xl shadow-lg border border-yellow-800/50 animate-slide-in-left">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-yellow-400">
             <span className="w-1.5 h-6 bg-gradient-to-b from-yellow-400 to-amber-600 rounded-full animate-pulse-vertical" />
             Live Sensor Data
           </h2>
-          <LiveSensorDataPanel />
+          {/* Pass setAlertList so the live panel can add/remove real alerts */}
+          <LiveSensorDataPanel setAlertList={setAlertList} />
         </div>
 
-        {/* B. Charts Grid */}
+        {/* B. Charts Grid (ThingSpeak live charts) */}
         <div className="grid lg:grid-cols-2 gap-8">
-
-          {/* Temperature & Humidity Chart */}
+          {/* Left: Temperature (charts/1) + Humidity small chart (charts/2) stacked */}
           <div className="bg-gray-900 p-6 rounded-xl shadow-lg border border-yellow-800/50 animate-slide-in-left">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-yellow-400">
               <span>🌡️</span>
-              Temperature & Humidity Trend
+              Temperature & Humidity Trend (live)
             </h2>
 
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={temperatureData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="time" stroke="#9CA3AF" />
-                <YAxis stroke="#9CA3AF" />
-                <Tooltip contentStyle={{ backgroundColor: "#1F2937", border: "1px solid #374151" }} />
-                <Legend />
-                <Line type="monotone" dataKey="temp" stroke="#FBBF24" name="Temp (°C)" strokeWidth={2} />
-                <Line type="monotone" dataKey="humidity" stroke="#60A5FA" name="Humidity (%)" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {/* Temperature main chart */}
+              <div style={{ width: "100%", height: 300, background: "#0f1720", borderRadius: 8, overflow: "hidden" }}>
+                <iframe
+                  title="ThingSpeak Temperature"
+                  src={`https://thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/charts/1?bgcolor=000000&color=00FFAA&dynamic=true&type=line&results=60`}
+                  style={IFRAME_STYLE_FULL}
+                />
+              </div>
+
+              {/* Humidity small chart under the main chart */}
+              <div style={{ width: "100%", height: 140, background: "#0f1720", borderRadius: 8, overflow: "hidden" }}>
+                <iframe
+                  title="ThingSpeak Humidity"
+                  src={`https://thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/charts/2?bgcolor=000000&color=60A5FA&dynamic=true&type=line&results=60`}
+                  style={IFRAME_STYLE_FULL}
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Gas Levels Chart */}
+          {/* Right: Gas Levels Chart */}
           <div className="bg-gray-900 p-6 rounded-xl shadow-lg border border-yellow-800/50 animate-slide-in-right">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-yellow-400">
               <span>💨</span>
-              Gas Levels Status
+              Gas Levels Status (live)
             </h2>
 
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={gasLevelsData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="sensor" stroke="#9CA3AF" />
-                <YAxis stroke="#9CA3AF" />
-                <Tooltip contentStyle={{ backgroundColor: "#1F2937", border: "1px solid #374151" }} />
-                <Legend />
-                <Bar dataKey="level" fill="#FBBF24" name="Current Level" />
-                <Bar dataKey="safe" fill="#34D399" name="Safe Limit" />
-              </BarChart>
-            </ResponsiveContainer>
+            <div style={{ width: "100%", height: 420, background: "#0f1720", borderRadius: 8, overflow: "hidden" }}>
+              <iframe
+                title="ThingSpeak Gas"
+                src={`https://thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/charts/3?bgcolor=000000&color=FBBF24&dynamic=true&type=line&results=60`}
+                style={IFRAME_STYLE_FULL}
+              />
+            </div>
           </div>
         </div>
 
         {/* C. Worker Activity + Alerts */}
         <div className="grid lg:grid-cols-3 gap-8">
-          
-          {/* Worker Activity */}
+          {/* Worker Activity (keep mock / placeholder or later replaced) */}
           <div className="lg:col-span-2 bg-gray-900 p-6 rounded-xl shadow-lg border border-yellow-800/50 animate-slide-in-bottom">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-yellow-400">
               <span>👥</span>
               Worker Activity Timeline
             </h2>
 
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={workerActivityData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="hour" stroke="#9CA3AF" />
-                <YAxis stroke="#9CA3AF" />
-                <Tooltip contentStyle={{ backgroundColor: "#1F2937", border: "1px solid #374151" }} />
-                <Legend />
-                <Line type="monotone" dataKey="active" stroke="#10B981" name="Active Workers" strokeWidth={2} />
-                <Line type="monotone" dataKey="idle" stroke="#F59E0B" name="Idle Workers" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
+            {/* You can later replace this with ThingSpeak history data or another source */}
+            <div style={{ width: "100%", height: 300 }} className="flex items-center justify-center text-gray-400">
+              Placeholder for worker/activity chart (optional)
+            </div>
           </div>
 
           {/* Alerts Panel */}
@@ -157,9 +124,8 @@ export default function Dashboard() {
               <span className="w-1.5 h-6 bg-gradient-to-b from-red-500 to-red-700 rounded-full animate-pulse-vertical" />
               Alerts
             </h2>
-            <AlertsPanel />
+            <AlertsPanel alertList={alertList} />
           </div>
-
         </div>
       </section>
     </main>
