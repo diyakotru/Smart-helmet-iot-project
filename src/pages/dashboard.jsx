@@ -55,28 +55,29 @@ export default function Dashboard() {
           {/* Pass setAlertList so the live panel can add/remove real alerts */}
           <LiveSensorDataPanel setAlertList={setAlertList} />
         </div>
-
-        {/* B. Charts Grid (ThingSpeak live charts) */}
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Left: Temperature (charts/1) + Humidity small chart (charts/2) stacked */}
-          <div className="bg-gray-900 p-6 rounded-xl shadow-lg border border-yellow-800/50 animate-slide-in-left">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-yellow-400">
-              <span>🌡️</span>
-              Temperature & Humidity Trend (live)
-            </h2>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {/* Temperature main chart */}
-              <div style={{ width: "100%", height: 300, background: "#0f1720", borderRadius: 8, overflow: "hidden" }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+            {/* Temperature */}
+            <div className="bg-gray-900 p-6 rounded-xl shadow-lg border border-yellow-800/50 animate-slide-in-up flex flex-col">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-yellow-400">
+                <span></span>
+                Temperature (live)
+              </h2>
+              <div className="w-full bg-[#0f1720] rounded-md overflow-hidden h-64 md:h-72 lg:h-80">
                 <iframe
                   title="ThingSpeak Temperature"
                   src={`https://thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/charts/1?bgcolor=000000&color=00FFAA&dynamic=true&type=line&results=60`}
                   style={IFRAME_STYLE_FULL}
                 />
               </div>
+            </div>
 
-              {/* Humidity small chart under the main chart */}
-              <div style={{ width: "100%", height: 140, background: "#0f1720", borderRadius: 8, overflow: "hidden" }}>
+            {/* Humidity */}
+            <div className="bg-gray-900 p-6 rounded-xl shadow-lg border border-yellow-800/50 animate-slide-in-up flex flex-col">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-yellow-400">
+                <span></span>
+                Humidity (live)
+              </h2>
+              <div className="w-full bg-[#0f1720] rounded-md overflow-hidden h-64 md:h-72 lg:h-80">
                 <iframe
                   title="ThingSpeak Humidity"
                   src={`https://thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/charts/2?bgcolor=000000&color=60A5FA&dynamic=true&type=line&results=60`}
@@ -84,42 +85,27 @@ export default function Dashboard() {
                 />
               </div>
             </div>
-          </div>
 
-          {/* Right: Gas Levels Chart */}
-          <div className="bg-gray-900 p-6 rounded-xl shadow-lg border border-yellow-800/50 animate-slide-in-right">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-yellow-400">
-              <span>💨</span>
-              Gas Levels Status (live)
-            </h2>
-
-            <div style={{ width: "100%", height: 420, background: "#0f1720", borderRadius: 8, overflow: "hidden" }}>
-              <iframe
-                title="ThingSpeak Gas"
-                src={`https://thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/charts/3?bgcolor=000000&color=FBBF24&dynamic=true&type=line&results=60`}
-                style={IFRAME_STYLE_FULL}
-              />
+            {/* Gas */}
+            <div className="bg-gray-900 p-6 rounded-xl shadow-lg border border-yellow-800/50 animate-slide-in-up flex flex-col">
+              <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-yellow-400">
+                <span></span>
+                Gas Levels (live)
+              </h2>
+              <div className="w-full bg-[#0f1720] rounded-md overflow-hidden h-64 md:h-72 lg:h-80">
+                <iframe
+                  title="ThingSpeak Gas"
+                  src={`https://thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/charts/3?bgcolor=000000&color=FBBF24&dynamic=true&type=line&results=60`}
+                  style={IFRAME_STYLE_FULL}
+                />
+              </div>
             </div>
           </div>
-        </div>
 
         {/* C. Worker Activity + Alerts */}
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Worker Activity (keep mock / placeholder or later replaced) */}
-          <div className="lg:col-span-2 bg-gray-900 p-6 rounded-xl shadow-lg border border-yellow-800/50 animate-slide-in-bottom">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-yellow-400">
-              <span>👥</span>
-              Worker Activity Timeline
-            </h2>
-
-            {/* You can later replace this with ThingSpeak history data or another source */}
-            <div style={{ width: "100%", height: 300 }} className="flex items-center justify-center text-gray-400">
-              Placeholder for worker/activity chart (optional)
-            </div>
-          </div>
-
-          {/* Alerts Panel */}
-          <div className="lg:col-span-1 bg-gray-900 p-6 rounded-xl shadow-lg border border-red-700/50 animate-slide-in-right">
+        <div className="grid gap-8">
+          {/* Alerts Panel (worker timeline removed to reduce clutter) */}
+          <div className="bg-gray-900 p-6 rounded-xl shadow-lg border border-red-700/50 animate-slide-in-right">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-red-400">
               <span className="w-1.5 h-6 bg-gradient-to-b from-red-500 to-red-700 rounded-full animate-pulse-vertical" />
               Alerts
