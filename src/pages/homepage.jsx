@@ -6,7 +6,11 @@ export default function HomePage() {
   const [hoveredSensor, setHoveredSensor] = useState(null);
 
   const sensors = [
-    { id: "fall-detector", name: "Fall Detector (IMU)", icon: "📍" },
+    {
+  id: "helmet_light",
+  name: "Mining Safety Light",
+  icon: "🔴"
+},
     { id: "gas-detector", name: "Gas Detector (MQ-X)", icon: "💨" },
     { id: "temperature", name: "Temperature/Humidity", icon: "🌡️" },
     { id: "led-indicator", name: "LED Indicator", icon: "💡" },
@@ -15,13 +19,14 @@ export default function HomePage() {
 
   const getCurrentSensorDetails = (id) => {
     switch (id) {
-      case "fall-detector":
+      case "helmet-light":
         return {
-          tag: "Motion/IMU",
-          status: "Normal",
-          value: "Tilt: 2.1°",
-          desc: "Detects sudden drops and falls using accelerometer data for immediate emergency alert.",
+          tag: "Safety Light",
+          status: "Active",
+          value: "Red LED On",
+          desc: "High-visibility red helmet light ensuring worker safety in low-light mining zones.",
         };
+
       case "gas-detector":
         return {
           tag: "Environment",
