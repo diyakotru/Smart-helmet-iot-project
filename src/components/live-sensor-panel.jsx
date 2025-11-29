@@ -6,13 +6,25 @@ import { Card } from "../components/ui/card";
 
 const THINGSPEAK_CHANNEL_ID = "3175273";
 const THINGSPEAK_READ_API_KEY = "APF8YFJJ6P4Y09X0";
-const POLLING_INTERVAL_MS = 20000;
-const MAX_ALERT_ROWS = 12;
+const POLLING_INTERVAL_MS = 5000;
+const MAX_ALERT_ROWS = 15;
 
 // Safe parser
 const parseNumberWithFallback = (value, fallback = null) => {
   const parsed = parseFloat(value);
   return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+const findLastValidReading = (feeds, fieldName) => {
+  if (!feeds || feeds.length === 0) return null;
+  // feeds[0] is newest because we use &order=desc
+  for (const feed of feeds) {
+    const val = feed[fieldName];
+    if (val !== null && val !== "" && val !== "nan") {
+      return val;
+    }
+  }
+  return null; // No data found in recent history
 };
 
 // Alert rules shared across UI + ThingSpeak ingest
@@ -112,7 +124,7 @@ export default function LiveSensorDataPanel({ setAlertList }) {
 
       try {
         const response = await fetch(
-          `https://api.thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/feeds.json?api_key=${THINGSPEAK_READ_API_KEY}&results=${MAX_ALERT_ROWS}`
+          `https://api.thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/feeds.json?api_key=${THINGSPEAK_READ_API_KEY}&results=${MAX_ALERT_ROWS}&order=desc`
         );
 
         if (!response.ok) throw new Error(`ThingSpeak error ${response.status}`);
@@ -125,11 +137,16 @@ export default function LiveSensorDataPanel({ setAlertList }) {
 
         if (!isMounted) return;
 
+        const lastTemp = findLastValidReading(feeds, 'field1');
+        const lastHum = findLastValidReading(feeds, 'field2');
+        const lastGas = findLastValidReading(feeds, 'field3');
+        const latestTime = feeds[0].created_at;
+
         setSensors({
-          temperature: parseNumberWithFallback(latest.field1),
-          humidity: parseNumberWithFallback(latest.field2),
-          gasLevels: parseNumberWithFallback(latest.field3),
-          lastUpdate: latest.created_at ? new Date(latest.created_at) : new Date(),
+          temperature: parseNumberWithFallback(lastTemp),
+          humidity: parseNumberWithFallback(lastHum),
+          gasLevels: parseNumberWithFallback(lastGas),
+          lastUpdate: latest.created_at ? new Date(latestTime) : new Date(),
         });
 
         if (setAlertList) {
@@ -140,8 +157,7 @@ export default function LiveSensorDataPanel({ setAlertList }) {
         setFetchError(null);
 
       } catch (err) {
-        if (!isMounted) return;
-        setFetchError(err.message);
+        if (!isMounted) setFetchError(err.message);
       } finally {
         if (isMounted) setIsFetching(false);
       }
@@ -171,23 +187,9 @@ export default function LiveSensorDataPanel({ setAlertList }) {
   // NEW MQ Thresholds
   const getStatusColor = (type, value) => {
     if (value == null) return "text-gray-500";
-
-    if (type === "temperature") {
-      if (value < thresholds.tempLow) return COLOR.WARNING_TEXT;
-      return COLOR.SAFE_TEXT;
-    }
-
-    if (type === "humidity") {
-      if (value < 30 || value > 70) return COLOR.WARNING_TEXT;
-      return COLOR.SAFE_TEXT;
-    }
-
-    if (type === "gas") {
-      if (value > 700) return COLOR.DANGER_TEXT;
-      if (value > 300) return COLOR.WARNING_TEXT;
-      return COLOR.SAFE_TEXT;
-    }
-
+    if (type === "temp" && (value < 20 || value > 32)) return COLOR.WARNING_TEXT;
+    if (type === "hum" && (value < 30 || value > 70)) return COLOR.WARNING_TEXT;
+    if (type === "gas" && value > 300) return value > 700 ? COLOR.DANGER_TEXT : COLOR.WARNING_TEXT;
     return COLOR.SAFE_TEXT;
   };
 

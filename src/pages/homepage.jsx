@@ -7,13 +7,13 @@ export default function HomePage() {
 
   const sensors = [
     {
-  id: "helmet_light",
+  id: "helmet-light",
   name: "Mining Safety Light",
   icon: "🔴"
 },
     { id: "gas-detector", name: "Gas Detector (MQ-X)", icon: "💨" },
     { id: "temperature", name: "Temperature/Humidity", icon: "🌡️" },
-    { id: "led-indicator", name: "LED Indicator", icon: "💡" },
+  //  { id: "led-indicator", name: "LED Indicator", icon: "💡" },
     { id: "buzzer", name: "Buzzer/Audio Alert", icon: "🔔" },
   ];
 
@@ -41,13 +41,13 @@ export default function HomePage() {
           value: "28°C / 65% RH",
           desc: "Tracks environmental temperature and humidity to alert for heat stress or extreme cold conditions.",
         };
-      case "led-indicator":
-        return {
-          tag: "Visual Alert",
-          status: "Green",
-          value: "System OK",
-          desc: "Visual status light on the helmet for quick, on-site status indication to supervisors.",
-        };
+      //case "led-indicator":
+      //  return {
+      //    tag: "Visual Alert",
+      //    status: "Green",
+      //    value: "System OK",
+      //    desc: "Visual status light on the helmet for quick, on-site status indication to supervisors.",
+      //  };
       case "buzzer":
         return {
           tag: "Audio Alert",

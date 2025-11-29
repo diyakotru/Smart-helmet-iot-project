@@ -5,8 +5,21 @@ import { Link } from "react-router-dom";
 
 export default function Settings() {
   const [notifications, setNotifications] = useState(true);
+  const [emailAlerts, setEmailAlerts] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [refreshRate, setRefreshRate] = useState("5");
+
+  const toggleBtnClass = (isActive) =>
+    `relative w-14 h-8 rounded-full transition-colors duration-300 ease-in-out flex-shrink-0 cursor-pointer border-2 ${
+      isActive
+        ? "bg-yellow-500 border-yellow-500"
+        : "bg-gray-600 border-gray-600"
+    }`;
+
+const toggleThumbClass = (isActive) =>
+    `absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform duration-300 ease-in-out shadow-sm ${
+      isActive ? "translate-x-6" : "translate-x-0"
+    }`;
 
   return (
     <main className="min-h-screen bg-black text-gray-100 font-sans">
@@ -45,14 +58,10 @@ export default function Settings() {
                 </div>
                 <button
                   onClick={() => setDarkMode(!darkMode)}
-                  className={`relative w-14 h-8 rounded-full transition-colors ${
-                    darkMode ? "bg-yellow-500" : "bg-gray-600"
-                  }`}
+                  className={toggleBtnClass(darkMode)}
                 >
                   <div
-                    className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform ${
-                      darkMode ? "translate-x-7" : "translate-x-1"
-                    }`}
+                    className={toggleThumbClass(darkMode)}
                   />
                 </button>
               </div>
@@ -94,15 +103,10 @@ export default function Settings() {
                 </div>
                 <button
                   onClick={() => setNotifications(!notifications)}
-                  className={`relative w-14 h-8 rounded-full transition-colors ${
-                    notifications ? "bg-yellow-500" : "bg-gray-600"
-                  }`}
+                  className={toggleBtnClass(notifications)}
                 >
                   <div
-                    className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform ${
-                      notifications ? "translate-x-7" : "translate-x-1"
-                    }`}
-                  />
+                    className={toggleThumbClass(notifications)}/>
                 </button>
               </div>
 
@@ -114,8 +118,10 @@ export default function Settings() {
                     Receive email notifications
                   </p>
                 </div>
-                <button className="relative w-14 h-8 rounded-full bg-gray-600 transition-colors">
-                  <div className="absolute top-1 left-1 w-6 h-6 bg-white rounded-full" />
+                <button onClick={() => setEmailAlerts(!emailAlerts)}
+                  className={toggleBtnClass(emailAlerts)}
+                >
+                  <div className={toggleThumbClass(emailAlerts)}/>
                 </button>
               </div>
             </div>
@@ -152,7 +158,7 @@ export default function Settings() {
                   defaultValue="35"
                   className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-yellow-500"
                 />
-                <p className="text-sm text-gray-400 mt-2">°C</p>
+                <span className="text-sm text-gray-400 mt-2">°C</span>
               </div>
             </div>
           </div>

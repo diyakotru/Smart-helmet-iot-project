@@ -13,6 +13,17 @@ export default function Dashboard() {
   // Shared alert list (source of truth for AlertsPanel)
   const [alertList, setAlertList] = useState([]);
 
+  const mostRecentAlert = alertList.length > 0 ? alertList[0] : null;
+  const formatTime = (date) => {
+    if (!date) return "";
+    const d = new Date(date);
+    const now = new Date();
+    const diff = now.getTime() - d.getTime();
+    const minutes = Math.floor(diff / 60000);
+    if (minutes < 1) return "Just now";
+    return `${minutes}m ago`;
+  };
+
   // iframe styles (keeps chart responsive)
   const IFRAME_STYLE_FULL = {
     width: "100%",
@@ -44,6 +55,29 @@ export default function Dashboard() {
         </div>
       </header>
 
+      {mostRecentAlert && (
+        <div className="max-w-7xl mx-auto px-4 mt-6 animate-slide-in-down">
+          <div className="bg-red-950/30 border border-red-500 rounded-xl p-4 flex items-center justify-between shadow-lg shadow-red-900/40 backdrop-blur-md">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="w-4 h-4 bg-red-500 rounded-full animate-ping absolute opacity-75"></div>
+                <div className="w-4 h-4 bg-red-600 rounded-full relative shadow-[0_0_10px_rgba(239,68,68,0.8)]"></div>
+              </div>
+              <div>
+                <h3 className="text-red-400 font-bold uppercase text-sm tracking-wider flex items-center gap-2">
+                  CRITICAL ALERT: {mostRecentAlert.type}
+                </h3>
+                <p className="text-gray-200 text-base font-medium mt-1">
+                   ⚠️ {mostRecentAlert.message}
+                </p>
+              </div>
+            </div>
+            <span className="text-red-300/70 text-sm font-mono border border-red-900/50 px-2 py-1 rounded bg-red-900/20">
+              {formatTime(mostRecentAlert.timestamp)}
+            </span>
+          </div>
+        </div>
+      )}
       {/* Dashboard Body */}
       <section className="max-w-7xl mx-auto px-4 py-8 space-y-8 animate-fade-in-up">
         {/* A. Live Sensor Data */}
