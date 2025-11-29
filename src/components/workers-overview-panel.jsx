@@ -5,12 +5,12 @@ import { Card } from "../components/ui/card" // Assuming Card accepts Tailwind c
 import { Button } from "../components/ui/button" // Assuming Button accepts Tailwind classes
 
 const MOCK_WORKERS = [
-  { id: '1', name: 'John Smith', workerId: 'WRK001', helmetId: 'HLM001', location: 'Foundation Level', status: 'Safe' },
-  { id: '2', name: 'Sarah Johnson', workerId: 'WRK002', helmetId: 'HLM002', location: 'Roof Section', status: 'Safe' },
-  { id: '3', name: 'Mike Chen', workerId: 'WRK003', helmetId: 'HLM003', location: 'Electrical Room', status: 'Warning' },
-  { id: '4', name: 'Emma Davis', workerId: 'WRK004', helmetId: 'HLM004', location: 'Basement', status: 'Safe' },
-  { id: '5', name: 'Alex Wilson', workerId: 'WRK005', helmetId: 'HLM005', location: 'Main Hall', status: 'Danger' },
-  { id: '6', name: 'Lisa Brown', workerId: 'WRK006', helmetId: 'HLM006', location: 'Upper Level', status: 'Safe' },
+  { id: '1', name: 'Ram Pujari', workerId: 'WRK001', helmetId: 'HLM001', location: 'Foundation Level', status: 'Safe' },
+  { id: '2', name: 'Geeta kumari', workerId: 'WRK002', helmetId: 'HLM002', location: 'Roof Section', status: 'Safe' },
+  { id: '3', name: 'Mona Singh', workerId: 'WRK003', helmetId: 'HLM003', location: 'Electrical Room', status: 'Warning' },
+  { id: '4', name: 'Nizaam Ali', workerId: 'WRK004', helmetId: 'HLM004', location: 'Basement', status: 'Safe' },
+  { id: '5', name: 'Asvik', workerId: 'WRK005', helmetId: 'HLM005', location: 'Main Hall', status: 'Danger' },
+  { id: '6', name: 'Lata', workerId: 'WRK006', helmetId: 'HLM006', location: 'Upper Level', status: 'Safe' },
 ]
 
 export default function WorkersOverviewPanel() {

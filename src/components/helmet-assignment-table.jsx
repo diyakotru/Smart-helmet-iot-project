@@ -5,7 +5,7 @@ import { useState, useMemo } from 'react'
 const MOCK_HELMETS = [
   {
     helmetId: 'HLM001',
-    assignedWorker: 'John Smith',
+    assignedWorker: 'Ram Pujari',
     workerId: 'WRK001',
     assignmentDate: '2024-01-10',
     lastCalibrated: '2024-11-15',
@@ -14,7 +14,7 @@ const MOCK_HELMETS = [
   },
   {
     helmetId: 'HLM002',
-    assignedWorker: 'Sarah Johnson',
+    assignedWorker: 'Mona Singh',
     workerId: 'WRK002',
     assignmentDate: '2024-01-12',
     lastCalibrated: '2024-11-14',
@@ -23,7 +23,7 @@ const MOCK_HELMETS = [
   },
   {
     helmetId: 'HLM003',
-    assignedWorker: 'Mike Chen',
+    assignedWorker: 'Asmita',
     workerId: 'WRK003',
     assignmentDate: '2024-01-15',
     lastCalibrated: '2024-11-10',
@@ -32,7 +32,7 @@ const MOCK_HELMETS = [
   },
   {
     helmetId: 'HLM004',
-    assignedWorker: 'Emma Davis',
+    assignedWorker: 'Anju',
     workerId: 'WRK004',
     assignmentDate: '2024-02-01',
     lastCalibrated: '2024-11-15',
@@ -41,7 +41,7 @@ const MOCK_HELMETS = [
   },
   {
     helmetId: 'HLM005',
-    assignedWorker: 'Alex Wilson',
+    assignedWorker: 'Nizaam Ali',
     workerId: 'WRK005',
     assignmentDate: '2024-02-05',
     lastCalibrated: '2024-11-12',
@@ -50,7 +50,7 @@ const MOCK_HELMETS = [
   },
   {
     helmetId: 'HLM006',
-    assignedWorker: 'Lisa Brown',
+    assignedWorker: 'Lata',
     workerId: 'WRK006',
     assignmentDate: '2024-02-08',
     lastCalibrated: '2024-11-15',
